@@ -6,6 +6,9 @@ import time
 import ctypes
 import keyboard
 import config
+import ray
+
+ray.init()
 
 class MainWindow(QMainWindow, QDialog):
     def __init__(self): #khi ép object vô class thì luôn chạy hàm constructor này
@@ -16,10 +19,10 @@ class MainWindow(QMainWindow, QDialog):
         self.setGeometry(0, 0, 1920, 1080) #kích thước fullHD
         self.setWindowTitle("Game cua Nghi")
         self.startup() #gọi hàm startup
-        self.showMaximized() #để phóng to fullscreen cửa sổ game
+        #self.showMaximized() #để phóng to fullscreen cửa sổ game
 
     def startup(self):
-        self.background=QLabel(self)
+        self.background=QLabel(self) #xem QLabel như là 1 cái khuôn nhỏ khác
         self.background.setPixmap(QPixmap(config.background)) #set hình nền đằng sau
         self.background.setGeometry(0,0, 1920, 1080)#set vị trí và kích thước, 0-0 là góc trái trên cùng
         self.background.show()
@@ -45,15 +48,14 @@ class MainWindow(QMainWindow, QDialog):
         self.target.resize(36, 20) #set kích thước hình mèo
 
         self.x=0 #con mèo bắt đầu chạy ngang từ x=0 ~ cạnh trái màn hình đến x=1080 ~ cạnh phải màn hình
-        self.y=400 #mèo chạy ngang nên x thay đổi, y giữ nguyên
 
         while True:
-            self.target.move(self.x, self.y) #di chuyển đến tọa độ x y trên màn hình
-            self.target.show() #hiện hình mèo ở vị trí đã di chuyển đến
-            self.x+=10 #tăng x để vòng lặp kế tiếp thì hình mèo di chuyển qua phải
+            self.result = ray.get([self.moveTarget.remote(self.x), self.detectClick.remote("L")]) #chạy song song, vừa detect click trong khi vẫn move target
+            print(self.result)
             time.sleep(0.03) #30fps, xuất 1 hình mỗi 0.03 giây >> 0.03*30 = 30 hình 1 giây
+            self.x+=5 #tăng x để vòng lặp kế tiếp thì hình mèo di chuyển qua phải
 
-            if(self.detectClick("L")==True): #mỗi vòng loop trong 0.03 giây luôn gọi hàm detectClick
+            if(self.result==True):
                 if(self.x>451 and self.x<629): #nếu đã click và con mèo nằm trong tầm bắn trúng aka giữa màn hình
                     self.isWin=True #set trạng thái là đã thắng
                     self.target.hide()
@@ -70,6 +72,8 @@ class MainWindow(QMainWindow, QDialog):
                 self.isWin=False #thua
                 break #thoát khỏi loop
 
+        ray.close()
+
         if self.isWin==True: #nếu trạng thái là thắng
             self.noticeWin() #thông báo chiến thắng
             time.sleep(3)
@@ -78,10 +82,16 @@ class MainWindow(QMainWindow, QDialog):
             self.target.hide() #ẩn hình mèo
             #self.startup()
 
+    @ray.remote
+    def moveTarget(self, x):
+        self.target.move(x, 400) #di chuyển đến tọa độ x y trên màn hình
+        self.target.show() #hiện hình mèo ở vị trí đã di chuyển đến
+
     def noticeWin(self):
         self.notice=QMessageBox(self, text="You win") #hiện cái pop up you win
         self.notice.show()
 
+    @ray.remote
     def detectClick(self, button, watchtime = 20): #phức tạp, chỉ cần biết là dùng để detectClick, trả về true hoặc false
         if button in (1, '1', 'l', 'L', 'left', 'Left', 'LEFT'):
             self.bnum = 0x01

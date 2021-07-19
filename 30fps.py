@@ -12,6 +12,7 @@ class MainWindow(QMainWindow, QDialog):
     def __init__(self): #khi ép object vô class thì luôn chạy hàm constructor này
         super(MainWindow, self).__init__()
         self.initUI() #khi chạy sẽ gọi hàm initUI
+        self.x=0
 
     def initUI(self): #set các thông số của cửa sổ game
         self.setGeometry(0, 0, 1920, 1080) #kích thước fullHD
@@ -33,14 +34,11 @@ class MainWindow(QMainWindow, QDialog):
         self.target.setGeometry(0, 400, 180, 270)
         self.target.show()
 
-        '''
-        for i in range(0, 1920):
+        for i in range(1920):
             self.target.move(i, 500) #di chuyển đến tọa độ x y trên màn hình
             self.target.show() #hiện hình mèo ở vị trí đã di chuyển đến
-            time.sleep(0.1)
             timer.sleep()
             pass
-            '''
 
 app=QApplication(sys.argv) #syntax mặc định của thư viện pyqt5 hỗ trợ tạo giao diện
 window=MainWindow() #object window ép vô khuôn(class MainWindow)

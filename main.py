@@ -13,13 +13,11 @@ ray.init() #ray hỗ trợ chạy song song nhiều method tại 1 thời điể
 class MainWindow(QMainWindow, QDialog):
     def __init__(self): #khi ép object vô class thì luôn chạy hàm constructor này
         super(MainWindow, self).__init__()
-        self.initUI() #khi chạy sẽ gọi hàm initUI
-
-    def initUI(self): #set các thông số của cửa sổ game
         self.setGeometry(0, 0, 1920, 1080) #kích thước fullHD
         self.setWindowTitle("Game cua Nghi")
-        self.startup() #gọi hàm startup
         self.showMaximized() #để phóng to fullscreen cửa sổ game
+        self.startup()
+        self.runGame()
 
     def startup(self):
         self.background=QLabel(self) #xem QLabel như là 1 cái khuôn nhỏ khác, ép object background vào
@@ -45,15 +43,15 @@ class MainWindow(QMainWindow, QDialog):
         self.gun=QLabel(self)
         self.gun.setScaledContents(True)
         self.gun.setPixmap(QPixmap(config.gun)) #set hình súng bắn mèo
-        self.gun.move(940, 1000) #set vị trí
+        self.gun.move(847, 820) #set vị trí
+        self.gun.resize(230, 215)
         self.gun.show()
 
         self.target=QLabel(self)
         self.target.setScaledContents(True)
         self.target.setPixmap(QPixmap(config.target)) #set hình mèo
-        self.target.resize(36, 20) #set kích thước hình mèo
-
-        self.x_pos = int(0) #con mèo bắt đầu chạy ngang từ x=0 ~ cạnh trái màn hình đến x=1080 ~ cạnh phải màn hình
+        self.target.setGeometry(0, 350, 180, 245)
+        self.target.show()
 
         for i in range(0, 1920):
             self.result = ray.get([self.moveTarget.remote(i), self.detectClick.remote("L")]) #chạy song song, vừa detect click trong khi vẫn move target

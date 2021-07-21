@@ -13,12 +13,16 @@ keyboard = Controller()
 class MainWindow(QMainWindow, QDialog):
     def __init__(self): #khi ép object vô class thì luôn chạy hàm constructor này
         super(MainWindow, self).__init__()
+        self.x_pos=1
         self.setGeometry(0, 0, 1920, 1080) #kích thước fullHD
         self.setWindowTitle("Game cua Nghi")
         self.showMaximized() #để phóng to fullscreen cửa sổ game
+        self.timer=QTimer(self)
+        self.timer.timeout.connect(self.moveTarget)
         self.startup()
         self.runGame()
         self.show()
+        self.timer.start(500/60)
 
     def startup(self):
         self.background=QLabel(self) #xem QLabel như là 1 cái khuôn nhỏ khác, ép object background vào
@@ -34,12 +38,17 @@ class MainWindow(QMainWindow, QDialog):
         self.target.setGeometry(0, 350, 180, 245)
         self.target.show()
 
-    def keyPressEvent(self, event):
+    def moveTarget(self):
+        self.target.move(self.x_pos, 350)
+        self.target.show()
+        self.x_pos+=2
+
+    '''def keyPressEvent(self, event):
         _x = self.target.x()
         _y = self.target.y()
         if event.key() == Qt.Key_Right:
                 _x += 5
-                self.target.move(_x, _y)
+                self.target.move(_x, _y)'''
 
 app=QApplication(sys.argv) #syntax mặc định của thư viện pyqt5 hỗ trợ tạo giao diện
 window=MainWindow() #object window ép vô khuôn(class MainWindow)

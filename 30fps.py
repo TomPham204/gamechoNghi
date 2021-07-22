@@ -43,13 +43,12 @@ class MainWindow(QMainWindow, QDialog):
         self.target.show()
         self.x_pos+=2
 
-    def keyPressEvent(self, event):
+    def mousePressEvent(self, event):
         _x = self.target.x()
         _y = self.target.y()
-        if event.key() == Qt.Key_Right:
-                if(_x < 900 and _x > 800):
-                    print(_x)
-                    print("win")
+        if event.button() == Qt.LeftButton:
+            if(_x < 900 and _x > 790):
+                print("win")
 
 app=QApplication(sys.argv) #syntax mặc định của thư viện pyqt5 hỗ trợ tạo giao diện
 window=MainWindow() #object window ép vô khuôn(class MainWindow)

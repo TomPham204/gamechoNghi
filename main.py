@@ -13,11 +13,16 @@ ray.init() #ray hỗ trợ chạy song song nhiều method tại 1 thời điể
 class MainWindow(QMainWindow, QDialog):
     def __init__(self): #khi ép object vô class thì luôn chạy hàm constructor này
         super(MainWindow, self).__init__()
+        self.x_pos=1
         self.setGeometry(0, 0, 1920, 1080) #kích thước fullHD
         self.setWindowTitle("Game cua Nghi")
         self.showMaximized() #để phóng to fullscreen cửa sổ game
+        self.timer=QTimer(self)
+        self.timer.timeout.connect(self.moveTarget)
         self.startup()
         self.runGame()
+        self.show()
+        self.timer.start(500/60)
 
     def startup(self):
         self.background=QLabel(self) #xem QLabel như là 1 cái khuôn nhỏ khác, ép object background vào
@@ -34,8 +39,7 @@ class MainWindow(QMainWindow, QDialog):
         self.instruct.setStyleSheet("background-color : #A9A9A9;")#set màu
         self.instruct.show()
 
-        #keyboard.wait('Space') #đợi player, khi player nhấn Space thì sẽ chạy 2 dòng phía dưới aka bắt đầu game
-        time.sleep(5)
+        keyboard.wait('Space') #đợi player, khi player nhấn Space thì sẽ chạy 2 dòng phía dưới aka bắt đầu game
         self.instruct.hide()
         self.runGame() #chạy hàm rungame
 
@@ -87,10 +91,10 @@ class MainWindow(QMainWindow, QDialog):
             #self.startup()
 
     @ray.remote
-    def moveTarget(self, x_pos):
-        self.target.hide()
-        self.target.move(x_pos, 400) #di chuyển đến tọa độ x y trên màn hình
-        self.target.show() #hiện hình mèo ở vị trí đã di chuyển đến
+    def moveTarget(self):
+        self.target.move(self.x_pos, 350)
+        self.target.show()
+        self.x_pos+=2
 
     def noticeWin(self):
         self.notice=QMessageBox(self, text="You win") #hiện cái pop up you win

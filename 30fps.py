@@ -22,7 +22,7 @@ class MainWindow(QMainWindow, QDialog):
         self.startup()
         self.runGame()
         self.show()
-        self.timer.start(500/60)
+        self.timer.start(500/30)
 
     def startup(self):
         self.background=QLabel(self) #xem QLabel như là 1 cái khuôn nhỏ khác, ép object background vào
@@ -43,12 +43,13 @@ class MainWindow(QMainWindow, QDialog):
         self.target.show()
         self.x_pos+=2
 
-    '''def keyPressEvent(self, event):
+    def keyPressEvent(self, event):
         _x = self.target.x()
         _y = self.target.y()
         if event.key() == Qt.Key_Right:
-                _x += 5
-                self.target.move(_x, _y)'''
+                if(_x < 900 and _x > 800):
+                    print(_x)
+                    print("win")
 
 app=QApplication(sys.argv) #syntax mặc định của thư viện pyqt5 hỗ trợ tạo giao diện
 window=MainWindow() #object window ép vô khuôn(class MainWindow)

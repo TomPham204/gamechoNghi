@@ -94,10 +94,10 @@ class MainWindow(QMainWindow, QDialog): #class MainWindow là cái khuôn
                 pass
 
     def missFire(self):
-        self.miss=QLabel(self) #nếu mèo còn trong màn hình nhưng không nằm trong tầm bắn thì hiện bắn hụt
+        self.miss=QLabel(self) #nếu mèo còn trong màn hình nhưng không nằm trong tầm bắn thì hiện cái hình bắn hụt
         self.miss.setScaledContents(True)
         self.miss.setPixmap(QPixmap(config.miss))
-        self.miss.setGeometry(self.mid.x()+20, 350, 160, 145)
+        self.miss.setGeometry(self.mid.x()+20, 350, 160, 145) 
         self.miss.show()
     
     def missFireHide(self):
@@ -106,7 +106,7 @@ class MainWindow(QMainWindow, QDialog): #class MainWindow là cái khuôn
     def moveTarget(self): #hàm để di chuyển con mèo, mèo là target=mục tiêu bị bắn
         self.target.move(self.x_pos, 350) #di chuyển mèo qua phải
         self.target.show()
-        self.x_pos+=4
+        self.x_pos+=2
 
     def noticeWin(self):
         self.timer.stop() #khi đã bắn trúng thì dừng hình mèo lại không cho di chuyển
@@ -121,6 +121,7 @@ class MainWindow(QMainWindow, QDialog): #class MainWindow là cái khuôn
 
         self.notice=QMessageBox(self, text="Congratulations,You win") #hiện cái pop up you win
         self.notice.move(850, 100)
+        #self.notice.resize(200, 100)
         self.notice.show()
         self.notice.buttonClicked.connect(sys.exit) #khi click nút ok thì sẽ thoát gamedef noticeWin(self):
 
@@ -136,19 +137,20 @@ class MainWindow(QMainWindow, QDialog): #class MainWindow là cái khuôn
 
     def keyPressEvent(self, event):
         x_gun = self.gun.x()
+        self.ratio=0
         if event.key() == Qt.Key_Left:
             if x_gun > 0:
-                self.gun.move(x_gun - 10, 820)
-                self.amuCount.move(self.gun.x()+105, self.gun.y()+160)
-                self.mid.move(x_gun + 4, self.mid.y())
+                self.gun.move(x_gun - 10 - self.ratio, 820)
+                self.amuCount.move(self.gun.x()+105+self.ratio, self.gun.y()+160)
+                self.mid.move(x_gun + 4+self.ratio, self.mid.y())
             if x_gun>=1920:
                 self.noticeLose()
 
         elif event.key() == Qt.Key_Right:
             if x_gun < 1920:
-                self.gun.move(x_gun + 10, 820)
-                self.amuCount.move(self.gun.x()+105, self.gun.y()+160)
-                self.mid.move(x_gun + 25, self.mid.y())
+                self.gun.move(x_gun + 10+self.ratio, 820)
+                self.amuCount.move(self.gun.x()+105+self.ratio, self.gun.y()+160)
+                self.mid.move(x_gun + 25+self.ratio, self.mid.y())
             if x_gun>=1920:
                 self.noticeLose()
 

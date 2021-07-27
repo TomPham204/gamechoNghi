@@ -8,6 +8,7 @@ from playsound import playsound
 import sys
 import config
 import random
+import winsound
 
 hasSound=False #nếu muốn có âm thanh khi bắn thì thay False bằng True nhưng khi bắn sẽ bị khựng. Không import module ray chỉ để chạy song song duy nhất 2 method vì quá nặng!
 
@@ -31,6 +32,7 @@ class MainWindow(QMainWindow, QDialog): #class MainWindow là cái khuôn
         self.miss_timer.timeout.connect(self.missFireHide)
 
     def runGame(self):   
+        winsound.PlaySound("bgm.wav", winsound.SND_ASYNC | winsound.SND_ALIAS )
         self.background=QLabel(self) #xem QLabel như là 1 cái khuôn nhỏ khác, ép object background vào
         self.background.setScaledContents(True) #scale hình khi phóng to thu nhỏ cửa sổ
         self.background.setPixmap(QPixmap(config.background)) #set hình cho object tên là background
@@ -102,6 +104,7 @@ class MainWindow(QMainWindow, QDialog): #class MainWindow là cái khuôn
     def noticeWin(self):
         self.timer.stop() #khi đã bắn trúng thì dừng hình mèo lại không cho di chuyển
         #self.target.hide()
+        winsound.PlaySound(None, winsound.SND_ASYNC)
 
         self.killed=QLabel(self) #hiện hình đã bắn trúng
         self.killed.setScaledContents(True)

@@ -18,7 +18,7 @@ class MainWindow(QMainWindow, QDialog): #class MainWindow là cái khuôn
         self.x_pos=1 #vị trí ban đầu của con mèo trên trục x
         self.setGeometry(0, 0, 1920, 1080) #kích thước fullHD=full screen
         self.setWindowTitle("Shoot the pussy") #cái dòng góc trên bên trái của cửa sổ >> tên của cửa sổ đang chạy
-        #self.showMaximized() #để phóng to fullscreen cửa sổ game
+        self.showMaximized() #để phóng to fullscreen cửa sổ game
         self.count = random.randint(2, 5) #random số đạn
         self.start() #gọi hàm start
 
@@ -84,14 +84,13 @@ class MainWindow(QMainWindow, QDialog): #class MainWindow là cái khuôn
                     self.noticeWin() #gọi hàm để thông báo đã giết mèo và thắng
                 elif(_x>1920): #... con mèo ngoài tầm bắn và đã ra khỏi màn hình
                     self.noticeLose()
-                    sys.exit() #nếu mèo chạy ra khỏi màn hình thì thua, quit game
                 else: #... mèo ngoài tầm bắn nhưng vẫn còn trong màn hình
                     self.missFire()
                     self.miss_timer.start(int(990/3))
                     pass
 
             if(self.count == 0):
-                #sys.exit()
+                self.noticeLose()
                 pass
 
     def missFire(self):
@@ -135,7 +134,6 @@ class MainWindow(QMainWindow, QDialog): #class MainWindow là cái khuôn
         self.notice.show()
         self.notice.buttonClicked.connect(sys.exit) #khi click nút ok thì sẽ thoát game
 
-
     def keyPressEvent(self, event):
         x_gun = self.gun.x()
         if event.key() == Qt.Key_Left:
@@ -144,7 +142,7 @@ class MainWindow(QMainWindow, QDialog): #class MainWindow là cái khuôn
                 self.amuCount.move(self.gun.x()+105, self.gun.y()+160)
                 self.mid.move(x_gun + 4, self.mid.y())
             if x_gun>=1920:
-                sys.exit()
+                self.noticeLose()
 
         elif event.key() == Qt.Key_Right:
             if x_gun < 1920:
@@ -152,7 +150,7 @@ class MainWindow(QMainWindow, QDialog): #class MainWindow là cái khuôn
                 self.amuCount.move(self.gun.x()+105, self.gun.y()+160)
                 self.mid.move(x_gun + 25, self.mid.y())
             if x_gun>=1920:
-                sys.exit()
+                self.noticeLose()
 
 
 app=QApplication(sys.argv) #syntax mặc định của thư viện pyqt5 hỗ trợ tạo giao diện

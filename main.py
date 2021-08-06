@@ -17,7 +17,7 @@ class MainWindow(QMainWindow, QDialog): #class MainWindow là cái khuôn
         super(MainWindow, self).__init__()
         self.x_pos=1 #vị trí ban đầu của con mèo trên trục x
         self.setGeometry(0, 0, 1920, 1080) #kích thước fullHD=full screen
-        self.setWindowTitle("Shoot the pussy") #cái dòng góc trên bên trái của cửa sổ >> tên của cửa sổ đang chạy
+        self.setWindowTitle("Shoot the cat") #cái dòng góc trên bên trái của cửa sổ >> tên của cửa sổ đang chạy
         self.showMaximized() #để phóng to fullscreen cửa sổ game
         self.count = random.randint(2, 5) #random số đạn
         self.start() #gọi hàm start
